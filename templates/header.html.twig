@@ -1,0 +1,56 @@
+<nav class="bg-white w-full top-0 z-20 border-b">
+    <div class="items-center px-4 max-w-screen-xl mx-auto md:px-8 lg:flex">
+        <div class="flex items-center justify-between py-3 lg:py-4 lg:block">
+            <a href="/" rel="nofollow">
+<svg class="w-10 h-10" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="512" height="512"><path d="m23.707,7.293c-.391-.391-1.023-.391-1.414,0l-2.293,2.293-5.586-5.586,2.293-2.293c.391-.391.391-1.023,0-1.414s-1.023-.391-1.414,0l-2.845,2.845-5.863,2.169c-1.488.551-2.637,1.791-3.073,3.317L.111,20.545c-.278.946-.018,1.967.68,2.664.513.514,1.202.79,1.904.79.251,0,.504-.035.751-.108l11.884-3.377c1.521-.432,2.76-1.574,3.315-3.054l2.215-5.907,2.846-2.846c.391-.391.391-1.023,0-1.414Zm-6.935,9.465c-.333.888-1.076,1.573-1.989,1.833l-11.12,3.16,5.818-5.818c.165.044.339.068.518.068,1.105,0,2-.895,2-2s-.895-2-2-2-2,.895-2,2c0,.179.024.353.068.518l-5.817,5.817,3.184-11.161c.262-.916.951-1.66,1.844-1.991l5.467-2.023,6.091,6.091-2.065,5.506Z"/></svg>
+
+            </a>
+            <div class="lg:hidden">
+                <button class="text-gray-700 outline-none p-2 rounded-md focus:border-gray-400 focus:border">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="flex-1 justify-between flex-row-reverse lg:overflow-visible lg:flex lg:pb-0 lg:pr-0 lg:h-auto hidden">
+            <div>
+                <ul class="flex flex-col-reverse space-x-0 lg:space-x-6 lg:flex-row">
+                    <li class="mt-8 mb-8 lg:mt-0 lg:mb-0">
+                        <a href="javascript:void(0)" class="text-gray-600 hover:text-indigo-600" rel="nofollow">Nous contacter</a>
+                    </li>
+                    {% if app.user %}
+                        {% if 'ROLE_VERIFIED' in app.user.roles %}
+                            <li class="mt-8 lg:mt-0">
+                                <a href="/dashboard" class="py-3 px-4 text-center text-white bg-indigo-600 hover:bg-indigo-700 rounded-md shadow block lg:inline" rel="nofollow">Dashboard</a>
+                            </li>
+
+
+                        {% else %}
+                            <li class="mt-4 lg:mt-0">
+                                <a href="/login" class="py-3 px-4 text-center border text-gray-600 hover:text-indigo-600 rounded-md block lg:inline lg:border-0" rel="nofollow">Se connecter</a>
+                            </li>
+                            <li class="mt-8 lg:mt-0">
+                                <a href="/register" class="py-3 px-4 text-center text-white bg-indigo-600 hover:bg-indigo-700 rounded-md shadow block lg:inline" rel="nofollow">S'inscrire</a>
+                            </li>
+                        {% endif %}
+                    {% else %} 
+                            <li class="mt-4 lg:mt-0">
+                                <a href="/login" class="py-3 px-4 text-center border text-gray-600 hover:text-indigo-600 rounded-md block lg:inline lg:border-0" rel="nofollow">Se connecter</a>
+                            </li>
+                            <li class="mt-8 lg:mt-0">
+                                <a href="/register" class="py-3 px-4 text-center text-white bg-indigo-600 hover:bg-indigo-700 rounded-md shadow block lg:inline" rel="nofollow">S'inscrire</a>
+                            </li>
+                    {% endif %}
+                    
+                    
+                </ul>
+            </div>
+            <div class="flex-1">
+                <ul class="justify-center items-center space-y-8 lg:flex lg:space-x-6 lg:space-y-0">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une note{% endblock %}
+
+{% block body %}
+<div class="flex">
+  <div class="w-1/4">
+      {% include "dashboard/navbar.html.twig" %}
+  </div>
+  <main class="flex flex-1 p-3 flex-col">
+      {{ form_start(form, {'attr': {'class': 'px-4 py-3'} }) }}
+
+
+<div class="relative mb-3" data-twe-input-wrapper-init>
+  <input
+    type="text"
+    name="{{ field_name(form.note_name) }}"
+    class="peer bg-white text-black block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none  dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+    id="exampleFormControlInputText"
+    placeholder="{{ field_label(form.note_name) }}" />
+  <label
+    for="exampleFormControlInputText"
+    class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary"
+    >{{ field_label(form.note_name) }}
+  </label>
+</div>
+
+
+
+    {{ form_row(form.note_category, {'attr': {'class': 'flex flex-col'} }) }}
+
+    <textarea id="content" name="{{ field_name(form.note_content) }}"></textarea>
+    <button type="submit" class="flex items-center gap-2 px-4 py-2 text-white bg-indigo-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700">
+        Créer une note
+    </button>
+{{ form_end(form) }}
+  </main>
+</div>
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+<script>
+      tinymce.init({
+        selector: '#content'
+      });
+</script>
+{% endblock %}

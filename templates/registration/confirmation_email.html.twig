@@ -1,0 +1,15 @@
+<section style="background: white; padding: 20px">
+
+    <main class="mt-8">
+        <h2 class="text-gray-700 dark:text-gray-200" style="color: black;">Merci de vous être inscrit sur TakingNote</h2>
+
+        <p class="mt-2 leading-loose text-gray-600 dark:text-gray-300">
+            Cliquez sur le lien suivant pour vérifier votre compte : 
+        </p>
+        
+        <a href="{{ signedUrl|raw }}" class="flex items-center gap-2 px-4 py-2 text-white bg-indigo-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700">Confirmer mon compte</a>.
+    Ce lien expirera {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+        
+    </main>
+    
+</section>

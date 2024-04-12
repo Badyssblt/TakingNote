@@ -1,0 +1,29 @@
+{% include "base.html.twig" %}
+
+
+
+{% block body %}
+<div class="flex">
+    <div class="w-1/4">
+        {% include "dashboard/navbar.html.twig" %}
+    </div>
+    <main class="flex flex-1 p-3 flex-col">
+        <div class="flex flex-row justify-between">
+            <h2 class="text-lg font-bold ">{{ note.name }}</h2>
+            <div class="flex flex-row gap-4 align-center">
+                <a class="flex items-center gap-2 px-4 py-2 text-white bg-indigo-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700" href="/note/edit/{{ note.id }}">Modifier</a>
+                <a class="flex items-center gap-2 px-4 py-2 text-white bg-red-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700" href="/note/delete/{{ note.id }}">Supprimer</a>
+            </div>
+        </div>
+        <div class="bg-white w-100 my-8 p-10 rounded">
+
+            <div>
+                {{ note.content|raw }}
+            </div>
+        </div>
+          
+    </main>
+</div>
+
+
+{% endblock %}
