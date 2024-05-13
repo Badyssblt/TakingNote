@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+{% block body %}
+{% set created_at = article.getCreatedAt %}
+{% set day = created_at|date('d') %}
+{% set month = months[created_at|date('m')|number_format(0, 'floor')] %}
+{% set year = created_at|date('Y') %}
+<div class="mx-80">
+
+    <div >
+        <h2 class="text-5xl font-bold mt-4">Nouveauté</h2>
+    </div>
+    <div class=" mt-10 ">
+        <div>
+            <p class="text-slate-600	">{{ day ~ ' ' ~ month ~ ' ' ~ year }}</p>
+        </div>
+        <h2 class=" font-bold text-4xl">{{ article.name }}</h2>
+        <div class="mt-12">
+            {{ article.content|raw }}
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

@@ -1,0 +1,336 @@
+<div class="w-100 flex flex-col gap-4 mr-10 bg-white p-4 rounded-lg ml-4">
+    <div class="flex flex-row justify-between">
+        <button onclick="displayForm('friends-pending__btn')" class="relative">
+            <span class="absolute bottom-4 left-4 inline-block bg-indigo-500 text-white rounded-full px-2 py-1 text-xs font-bold">
+                {{ pendingFriends|length }}
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg"  class="w-6 h-6" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"/></svg></button>
+        <h2 class="font-bold text-xl text-center">Amis</h2>
+        <button onclick="displayForm('search_form')" ><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6 .1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
+    </div>
+    <div class="container flex-col h-80 overflow-auto" id="notes">
+        {% for friend in friends %}
+            {% if friend.user1.id != app.user.id %}
+                <div class="w-100 p-4 m-text-center flex flex-row cursor-pointer items-center">
+                    <div class="w-16 mr-4">
+                        {% if friend.user1.imageName != null %}
+                        <img src="/images/uploads/avatar/{{ friend.user1.imageName }}" alt="" class="w-full h-auto rounded-full">
+                        {% else %}
+                        <img src="/images/users/user.png" alt="" class="w-full h-auto">
+                        {% endif %}
+                        
+                    </div>
+                    <div class="mt-2">
+                        <p>{{ friend.user1.name }}</p>
+                        <button class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm" onclick="toggleForm('share_button', '{{ friend.user1.id }}')">Partager une note</button>
+                    </div>
+                </div> 
+            {% elseif friend.user2.id != app.user.id %}
+                <div class="w-100 p-4 m-text-center flex flex-row cursor-pointer items-center" >
+                    <div class="w-16 mr-4">
+                        {% if friend.user2.imageName != null %}
+                        <img src="/images/uploads/avatar/{{ friend.user2.imageName }}" alt="" class="w-full h-auto rounded-full">
+                        {% else %}
+                        <img src="/images/users/user.png" alt="" class="w-full h-auto">
+                        {% endif %}
+                        
+                    </div>
+                    <div class="mt-2">
+                        <p>{{ friend.user2.name }}</p>
+                        <button class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm" onclick="toggleForm('share_button', '{{ friend.user2.id }}')">Partager une note</button>
+
+                    </div>
+                </div> 
+            {% endif %}
+        {% endfor %}
+
+
+        
+        
+    </div>
+
+</div>
+
+
+{# Show note available for share to friends #}
+<div id="share_button" class="toggled fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        
+    <div class="flex justify-end flex-col w-80">
+        {# Close button #}
+        <button onclick="toggleForm('share_button')"
+        class="flex justify-center w-fit select-none rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 py-1 px-3 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="button">
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>        </button>
+        {# End Close button #}
+        <div class="container bg-white flex flex-col">
+            <form action="POST">
+                <input type="hidden" name="friendID" value="" id="friendID">
+                <div class="flex flex-col" id="note_container">
+                
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{# List of pendings friends #}
+<div id="friends-pending__btn" class="toggled fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        
+    <div class="flex justify-end flex-col w-80">
+        {# Close button #}
+        <button onclick="toggleForm('friends-pending__btn')"
+        class="flex justify-center w-fit select-none rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 py-1 px-3 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="button">
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>        </button>
+        {# End Close button #}
+        <div class="container bg-white flex flex-col">
+            {% for pendingFriend in pendingFriends %}
+            {% if pendingFriend.user1.id != app.user.id %}
+                <div class="w-100 p-4 m-text-center flex flex-row cursor-pointer items-center">
+                    <div class="w-16 mr-4">
+                        {% if pendingFriend.user1.imageName != null %}
+                        <img src="/images/uploads/avatar/{{ pendingFriend.user1.imageName }}" alt="" class="w-full h-auto rounded-full">
+                        {% else %}
+                        <img src="/images/users/user.png" alt="" class="w-full h-auto">
+                        {% endif %}
+                        
+                    </div>
+                    <div class="mt-2">
+                        <p>{{ pendingFriend.user1.name }}</p>
+                        <div class="flex flex-row gap-2">
+                            <a href="/friends/{{ pendingFriend.user1.id }}/accept" class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm">Accepter</a>
+                            <a href="/friends/{{ pendingFriend.user1.id }}/denied" class="text-center  items-center gap-2 mt-2 px-4 py-2 text-white bg-red-800 rounded-full duration-150 hover:bg-red-700  text-sm" >Refuser</a>
+                        </div>
+                        
+                    </div>
+                </div> 
+            {% elseif pendingFriend.user2.id != app.user.id %}
+                <div class="w-100 p-4 m-text-center flex flex-row cursor-pointer items-center" >
+                    <div class="w-16 mr-4">
+                        {% if pendingFriend.user2.imageName != null %}
+                        <img src="/images/uploads/avatar/{{ pendingFriend.user2.imageName }}" alt="" class="w-full h-auto rounded-full">
+                        {% else %}
+                        <img src="/images/users/user.png" alt="" class="w-full h-auto">
+                        {% endif %}
+                        
+                    </div>
+                    <div class="mt-2">
+                        <p>{{ pendingFriend.user2.name }}</p>
+                        <div class="flex flex-row gap-2">
+                            <a href="/friends/{{ pendingFriend.user2.id }}/accept" class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm">Accepter</a>
+                            <a href="/friends/{{ pendingFriend.user2.id }}/denied" class="text-center  items-center gap-2 mt-2 px-4 py-2 text-white bg-red-800 rounded-full duration-150 hover:bg-red-700  text-sm" >Refuser</a>
+                        </div>
+
+                    </div>
+                </div> 
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{# Search a user to add as friend #}
+<div id="search_form" class="toggled fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        
+    <div class="flex justify-end flex-col w-80 bg-white p-4 rounded-lg">
+        {# Close button #}
+        <button onclick="toggleForm('search_form')"
+        class="flex justify-center w-fit select-none rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 py-1 px-3 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="button">
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>        </button>
+        {# End Close button #}
+        <div class="container bg-white flex flex-col bg ">
+            <form action="POST" id="search_user">
+                <div class="relative mb-3" data-twe-input-wrapper-init>
+                    <input
+                      type="text"
+                      name="username"
+                      autocomplete="off"
+                      class="peer bg-white text-black block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none  dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0"
+                      id="username"
+                      placeholder="Entrer le nom de la note" />
+                    <label
+                      for="username"
+                      class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary"
+                      >Entrer le nom de l'utilisateur
+                    </label>
+                  </div>
+                  <div id="result">
+
+                  </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    let notes = undefined;
+    async function getNotes()
+    {
+        try {
+           const res = await fetch("/getNotes")
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Une erreur est survenue lors de la récupération des notes.');
+        }
+    })
+    .then(data => {
+        notes = data;
+    })
+    .catch(error => {
+        console.error('Erreur de requête:', error);
+    });
+           
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        await getNotes();
+    })
+
+    document.getElementById("search_user").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        let name = document.getElementById("username").value;
+        await searchUser(name);
+    });
+
+
+    async function searchUser(name) {
+    try {
+        const res = await fetch("/search/user?name=" + name)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Une erreur est survenue lors de la récupération des notes.');
+                }
+            })
+            .then(data => {
+                const container = document.getElementById("result");
+                container.innerHTML = null;
+                if (data.length == 0) {
+                    let element = `<div class="w-100 cursor-pointer ">
+                        <p class="text-center">Aucun résultat...</p>
+                    </div> `;
+                    container.innerHTML += element;
+                }
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].imageName == null) {
+                        let element = `<div class="w-100 p-4 m-text-center flex flex-row cursor-pointer items-center">
+                            <div class="w-16 mr-4">
+                                <img src="./images/users/user.png" alt="" class="w-full h-auto">
+                            </div>
+                            <div class="mt-2">
+                                <p>${data[i].name}</p>
+                                <button data-user-id="${data[i].id}" onclick="addFriends(event, ${data[i].id})" class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm" >Ajouter en ami</button>
+                            </div>
+                        </div> `;
+                        container.innerHTML += element;
+
+                    } else {
+                        let element = `<div class="w-100 p-4 m-text-center flex flex-row cursor-pointer items-center">
+                            <div class="w-16 mr-4">
+                                <img src="./images/uploads/avatar/${data[i].imageName}" alt="" class="w-full h-auto rounded-full">
+                            </div>
+                            <div class="mt-2">
+                                <p>${data[i].name}</p>
+                                <button data-user-id="${data[i].id}" onclick="addFriends(event, ${data[i].id})" class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm" >Ajouter en ami</button>
+                            </div>
+                        </div> `;
+                        container.innerHTML += element;
+
+                    }
+
+                }
+            })
+            .catch(error => {
+                console.error('Erreur de requête:', error);
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+    async function addFriends(event, id) {
+    try {
+        event.preventDefault();
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                requestUser: id
+            })
+        };
+        const res = await fetch("/friends", requestOptions);
+        if (res.ok) {
+            const button = document.querySelector(`button[data-user-id="${id}"]`);
+            console.log(button);
+            if (button) {
+                button.innerHTML += `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>`;
+            }
+        } else {
+            throw new Error('Une erreur est survenue lors de la demande d\'ajout en ami.');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+    function toggleForm(formId, userID) {
+        let form = document.getElementById(formId);
+        let forms = document.querySelectorAll('.toggled');
+        const noteContainer = document.getElementById("note_container");
+        let shareLink = document.getElementById("url_share");
+        noteContainer.innerHTML = null;
+        for (let i = 0; i < notes.notes.length; i++) {
+            const element = `<div class="max-w-md py-4 bg-white rounded-md overflow-hidden border border-gray-300"> <!-- Ajout de la classe "border" et "border-gray-300" pour une bordure grise -->
+                        <div class="px-6 py-4">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-2">${notes.notes[i].name}</h2>
+                        </div>
+                        <a href="/note/${notes.notes[i].id}/user/${userID}?role=WRITER" id="url_share" class="mx-4 justify-center flex items-center gap-2 px-4 py-2 text-white bg-indigo-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700">
+                            Autoriser la modification
+                        </a>
+                    </div>`;
+
+            noteContainer.innerHTML += element;
+        }
+
+        
+        friendID.value = userID;
+        forms.forEach(function(item) {
+            if(item !== form) item.classList.add('hidden');
+        });
+        if (form.classList.contains('hidden')) {
+            form.classList.remove('hidden');
+        } else {
+            form.classList.add('hidden');
+        }
+    }
+
+    function displayForm(formId){
+        let form = document.getElementById(formId);
+        let forms = document.querySelectorAll('.toggled');
+        forms.forEach(function(item) {
+            if(item !== form) item.classList.add('hidden');
+        });
+        if (form.classList.contains('hidden')) {
+            form.classList.remove('hidden');
+        } else {
+            form.classList.add('hidden');
+        }
+    }
+</script>
+

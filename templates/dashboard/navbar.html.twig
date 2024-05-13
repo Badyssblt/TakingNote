@@ -5,7 +5,16 @@
                 <div class="flex flex-row justify-between items-center">
                     <div class="flex flex-row">
                         <div class="w-20">
-                            <img src="/images/users/user.png" alt="">
+                            
+                            {% if app.user.imageName is same as (null)  %}
+                                <img src="/images/users/user.png" alt="">
+                                {% else %}
+                                <div class="w-16 h-16 rounded-full overflow-hidden">
+                                    <img class="object-cover w-full h-full" src="{{ vich_uploader_asset(app.user, 'imageFile') }}" alt="">
+                                </div>
+  
+                            {% endif %}
+                            
                         </div>
                         <div>
                             <p>{{ app.user.name }}</p>

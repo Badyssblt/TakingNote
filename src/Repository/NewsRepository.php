@@ -2,39 +2,27 @@
 
 namespace App\Repository;
 
-use App\Entity\Note;
-use App\Entity\User;
+use App\Entity\News;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Note>
+ * @extends ServiceEntityRepository<News>
  *
- * @method Note|null find($id, $lockMode = null, $lockVersion = null)
- * @method Note|null findOneBy(array $criteria, array $orderBy = null)
- * @method Note[]    findAll()
- * @method Note[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method News|null find($id, $lockMode = null, $lockVersion = null)
+ * @method News|null findOneBy(array $criteria, array $orderBy = null)
+ * @method News[]    findAll()
+ * @method News[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class NoteRepository extends ServiceEntityRepository
+class NewsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Note::class);
-    }
-
-    public function findNotesByUserAndGroups(User $user): array
-    {
-        return $this->createQueryBuilder('n')
-            ->join('n.author', 'author')
-            ->join('author.userGroups', 'ug')
-            ->where('author = :user')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
+        parent::__construct($registry, News::class);
     }
 
     //    /**
-    //     * @return Note[] Returns an array of Note objects
+    //     * @return News[] Returns an array of News objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -48,7 +36,7 @@ class NoteRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Note
+    //    public function findOneBySomeField($value): ?News
     //    {
     //        return $this->createQueryBuilder('n')
     //            ->andWhere('n.exampleField = :val')
@@ -57,5 +45,4 @@ class NoteRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-
 }

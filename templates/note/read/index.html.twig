@@ -1,8 +1,10 @@
-{% include "base.html.twig" %}
+{% extends "base.html.twig" %}
 
 
 
 {% block body %}
+
+
 <div class="flex">
     <div class="w-1/4">
         {% include "dashboard/navbar.html.twig" %}
@@ -11,19 +13,86 @@
         <div class="flex flex-row justify-between">
             <h2 class="text-lg font-bold ">{{ note.name }}</h2>
             <div class="flex flex-row gap-4 align-center">
-                <a class="flex items-center gap-2 px-4 py-2 text-white bg-indigo-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700" href="/note/edit/{{ note.id }}">Modifier</a>
-                <a class="flex items-center gap-2 px-4 py-2 text-white bg-red-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700" href="/note/delete/{{ note.id }}">Supprimer</a>
+              {% if is_author %}
+              <a class="flex items-center gap-2 px-4 py-2 text-white bg-indigo-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700" href="/note/edit/{{ note.id }}">Modifier</a>
+              <a class="flex items-center gap-2 px-4 py-2 text-white bg-red-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700" href="/note/delete/{{ note.id }}">Supprimer</a>
+              <a class="flex items-center gap-2 px-4 py-2 text-white bg-indigo-600 rounded-lg duration-150 hover:bg-indigo-500 active:bg-indigo-700" href="/note/share/{{ note.id }}">Partager</a>
+              {% endif %}
+              <div class="flex flex-row items-center">
+                {% for userPerm in group %}
+
+                <div class="w-8 h-8 mr-4 overflow-hidden">
+                  {% if userPerm.getUser().getImageName() != null %}
+                      <img src="/images/uploads/avatar/{{ userPerm.getUser().getImageName() }}" alt="{{ userPerm.getUser().getName() }}" class="w-full h-full object-cover rounded-full">
+                  {% else %}
+                      <img src="/images/users/user.png" alt="{{ userPerm.getUser().getName() }}" class="w-full h-full object-cover rounded-full">
+                  {% endif %}
+              </div>
+              {% endfor %}
+
+              </div>
+              
+            
             </div>
+            
         </div>
+        
         <div class="bg-white w-100 my-8 p-10 rounded">
 
-            <div>
-                {{ note.content|raw }}
-            </div>
+            <div id="editor" data-note-content="{{ note.content }}"></div>
+
         </div>
           
     </main>
 </div>
 
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+
+<script>
+    const pageId = window.location.href.split("/note/").pop();
+    const isAuthor = {{ is_author ? 'true' : 'false' }};
+    
+  document.addEventListener('DOMContentLoaded', async function () {
+    const editor = new EditorJS({
+        data: {
+            // Récupération de la valeur de note.content depuis l'attribut de données
+            blocks: JSON.parse(document.getElementById('editor').getAttribute('data-note-content'))
+        },
+        readOnly: !isAuthor,
+      /**
+       * Id of Element that should contain Editor instance
+       */
+      holder: 'editor',
+      /**
+       * Available Tools list.
+       * Pass Tool's class or Settings object for each Tool you want to use
+       */
+      tools: {
+        header: {
+          class: Header,
+          inlineToolbar: ['link'],
+          config: {
+            placeholder: 'Enter a header',
+            levels: [2, 3, 4],
+            defaultLevel: 3
+          }
+        },
+        image: SimpleImage,
+        delimiter: Delimiter,
+        list: List,
+        checklist: Checklist,
+      }
+    });
+
+});
+</script>
 {% endblock %}

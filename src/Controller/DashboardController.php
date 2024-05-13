@@ -6,6 +6,7 @@ use App\Entity\BlocNote;
 use App\Entity\User;
 use App\Form\BlocNoteCreateFormType;
 use App\Repository\BlocNoteRepository;
+use App\Repository\FriendsRepository;
 use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,13 +26,13 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/dashboard', name: 'app_dashboard')]
-    public function index(EntityManagerInterface $manager, NoteRepository $noteRepository, Security $security, Request $request): Response
+    public function index(FriendsRepository $friendsRepository, FriendsController $friendsController, EntityManagerInterface $manager, NoteRepository $noteRepository, Security $security, Request $request): Response
     {
         if (!$this->user) {
             return $this->redirectToRoute('app_home');
         }
         $numbers = $noteRepository->count(['author' => $this->user]);
-        $notes = $noteRepository->findByLimit(5, $this->user);
+        $notes = $noteRepository->findBy(['author' => $this->user], [], 5);
         $blocNoteForm = $this->createForm(BlocNoteCreateFormType::class);
 
         $blocNoteForm->handleRequest($request);
@@ -48,13 +49,16 @@ class DashboardController extends AbstractController
         }
 
         $blocNotes = $this->user->getBlocNotes();
-
+        $friends = $friendsRepository->getFriendsQuery($this->user, 'accepted');
+        $pendingFriends = $friendsRepository->getFriendsQuery($this->getUser(), 'pending');
 
         return $this->render('dashboard/index.html.twig', [
             'notes' => $notes,
             'numbers' => $numbers,
             'blocNoteForm' => $blocNoteForm,
-            'blocnotes' => $blocNotes
+            'blocnotes' => $blocNotes,
+            'friends' => $friends,
+            'pendingFriends' => $pendingFriends
         ]);
     }
 }

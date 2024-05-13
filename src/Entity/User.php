@@ -12,6 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -23,6 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["read:user:collection", "post:item:friend"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -44,6 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $isVerified = false;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:user:collection", "post:item:friend"])]
     private ?string $name = null;
 
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'author')]
@@ -53,6 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $blocNotes;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["read:user:collection"])]
     private ?string $imageName = null;
 
     #[ORM\Column(nullable: true)]
@@ -62,7 +67,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[Vich\UploadableField(mapping: 'user_avatar', fileNameProperty: 'imageName', size: 'imageSize')]
+    #[Ignore]
     private ?File $imageFile = null;
+
+    #[ORM\OneToMany(targetEntity: Friends::class, mappedBy: 'user1')]
+    private Collection $friends;
+
+    #[ORM\OneToMany(targetEntity: UserPermission::class, mappedBy: 'user')]
+    private Collection $userPermissions;
 
 
     public function __construct()
@@ -70,11 +82,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->notes = new ArrayCollection();
         $this->blocNotes = new ArrayCollection();
         $this->roles = ['ROLE_USER_UNVERIFIED'];
+        $this->friends = new ArrayCollection();
+        $this->userPermissions = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return Collection<int, UserPermission>
+     */
+    public function getUserPermissions(): Collection
+    {
+        return $this->userPermissions;
+    }
+
+    public function addUserPermission(UserPermission $userPermission): self
+    {
+        if (!$this->userPermissions->contains($userPermission)) {
+            $this->userPermissions[] = $userPermission;
+            $userPermission->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserPermission(UserPermission $userPermission): self
+    {
+        if ($this->userPermissions->removeElement($userPermission)) {
+            $userPermission->setUser($this);
+        }
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -312,6 +353,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImageName($imageName)
     {
         $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'roles' => $this->roles,
+            'password' => $this->password
+        ];
+    }
+
+    /**
+     * @return Collection<int, Friends>
+     */
+    public function getFriends(): Collection
+    {
+        return $this->friends;
+    }
+
+    public function addFriend(Friends $friend): static
+    {
+        if (!$this->friends->contains($friend)) {
+            $this->friends->add($friend);
+            $friend->setUser1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriend(Friends $friend): static
+    {
+        if ($this->friends->removeElement($friend)) {
+            // set the owning side to null (unless already changed)
+            if ($friend->getUser1() === $this) {
+                $friend->setUser1(null);
+            }
+        }
 
         return $this;
     }

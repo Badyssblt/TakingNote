@@ -13,9 +13,10 @@
             <h2 class="text-current font-bold text-2xl">Dashboard de {{ app.user.name }}</h2>
         </div>
         <div class="container ">
+            <h2 class="text-xl font-bold">Vos notes</h2>
             <div class="text-right mr-4 w-100 underline underline-offset-2"><a class="text-slate-400" href="/notes" class="mr-4">Voir tout</a></div>
             <div class="flex w-100 overflow-hidden gap-4">
-
+            
             {% for note in notes %}
             <div class="max-w-md py-4 bg-white rounded-md overflow-hidden border border-gray-300"> <!-- Ajout de la classe "border" et "border-gray-300" pour une bordure grise -->
               <div class="px-6 py-4">
@@ -32,5 +33,8 @@
         {% include "dashboard/blocnote.html.twig" %}
           
     </main>
+    <div class="w-1/4">
+        {% include "dashboard/friends.html.twig" %}
+    </div>
 </div>
 {% endblock %}
