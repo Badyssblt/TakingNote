@@ -22,7 +22,10 @@
                     </div>
                     <div class="mt-2">
                         <p>{{ friend.user1.name }}</p>
-                        <button class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm" onclick="toggleForm('share_button', '{{ friend.user1.id }}')">Partager une note</button>
+                        <div class="flex flex-row gap-2">
+                            <button class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm" onclick="toggleForm('share_button', '{{ friend.user1.id }}')">Partager une note</button>
+                            <a href="/friends/{{friend.user1.id}}/denied" class="text-center  items-center gap-2 mt-2 px-4 py-2 text-white bg-red-800 rounded-full duration-150 hover:bg-red-700  text-sm" >Supprimer</a>
+                        </div>
                     </div>
                 </div> 
             {% elseif friend.user2.id != app.user.id %}
@@ -37,8 +40,10 @@
                     </div>
                     <div class="mt-2">
                         <p>{{ friend.user2.name }}</p>
+                        <div class="flex flex-row gap-2">
                         <button class="flex items-center gap-2 mt-2 px-4 py-2 text-white bg-indigo-600 rounded-full duration-150 hover:bg-indigo-500 active:bg-indigo-700 text-sm" onclick="toggleForm('share_button', '{{ friend.user2.id }}')">Partager une note</button>
-
+                        <a href="/friends/{{friend.user2.id}}/denied" class="text-center  items-center gap-2 mt-2 px-4 py-2 text-white bg-red-800 rounded-full duration-150 hover:bg-red-700  text-sm" >Supprimer</a>
+                    </div>
                     </div>
                 </div> 
             {% endif %}
